@@ -50,7 +50,7 @@ Relationships:
 - OPA: policy enforcement (Phase 2)
 
 ## PCAPs available at
-data/pcaps/ — real OT captures including Modbus, DNP3, S7
+data/pcaps/ICS-pcap-master/ — real OT captures including Modbus, S7, DNP3, EIP, BACnet, IEC104, HART including Modbus, DNP3, S7
 
 ## What NOT to build
 - No web UI yet
