@@ -1,3 +1,0 @@
-https://wiki.wireshark.org/OMRON-FINS
-Protocol dependencies
-UDP: Typically, FINS uses UDP as its transport protocol. The well known UDP port for PROTO traffic is 9600.

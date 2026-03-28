@@ -75,3 +75,23 @@ This is a real security product, not a demo. Code quality matters.
 Error handling matters. If Zeek produces a malformed log line,
 the pipeline should log it and continue, not crash.
 EOF
+
+## Continuation Instructions
+All Step 1-4 code exists and 106 tests pass. Continue from Step 5.
+
+Step 5: Build src/detect/queries.py
+- Five Cypher detection queries as Python functions using neo4j driver
+- cross_zone_violations(), new_devices(), new_edges(), interval_deviation(), unknown_protocol()
+- Each returns a list of dicts from Neo4j
+- Tests in tests/test_queries.py using a mock Neo4j driver
+
+Step 6: Build src/main.py
+- Wires the full pipeline end to end
+- Reads PCAPs from data/pcaps/, runs through zeek_parser
+- Feeds producer into Redpanda
+- Consumer writes to Neo4j
+- Runs detection queries and logs results
+
+Do NOT start Neo4j or Redpanda — assume they are already running.
+Do NOT install system packages.
+Only work inside ~/Desktop/guardance_v1/
