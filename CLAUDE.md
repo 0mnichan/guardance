@@ -95,3 +95,83 @@ Step 6: Build src/main.py
 Do NOT start Neo4j or Redpanda — assume they are already running.
 Do NOT install system packages.
 Only work inside ~/Desktop/guardance_v1/
+
+## Continuation — Morning Session
+Steps 1-4 complete, 72 tests passing (38 parser + 34 producer).
+Writer and consumer code exists but needs Neo4j/Redpanda to test.
+
+Continue with Step 5 ONLY:
+
+Build src/detect/queries.py
+- Five detection functions using the neo4j Python driver
+- cross_zone_violations(session) 
+- new_devices(session, baseline_end: datetime)
+- new_edges(session, baseline_end: datetime)
+- interval_deviation(session, min_ms=100, max_ms=1000)
+- unknown_protocol(session, allowed: list[str])
+- Each returns list[dict]
+- Mock the neo4j driver in tests — do NOT start Neo4j
+- Tests in tests/test_queries.py
+
+Stop after test_queries.py passes.
+Do not proceed to Step 6 without being asked.
+Only work inside ~/Desktop/guardance_v1/
+Do not run apt, sudo, or system commands.
+
+## Continuation — Unsupervised Build
+Steps 1-4 complete, 72 tests passing (38 parser + 34 producer).
+src/graph/writer.py and src/graph/consumer.py exist but untested.
+
+Build everything remaining autonomously. Do not stop and ask for confirmation between steps. Complete the entire Phase 1 pipeline end to end.
+
+## Remaining steps in order:
+
+### Step 5: src/detect/queries.py
+- Five detection functions using neo4j Python driver
+- cross_zone_violations(session)
+- new_devices(session, baseline_end: datetime)
+- new_edges(session, baseline_end: datetime)
+- interval_deviation(session, min_ms=100, max_ms=1000)
+- unknown_protocol(session, allowed: list[str])
+- Each returns list[dict]
+- Mock neo4j driver in tests — do NOT start Neo4j
+- Tests in tests/test_queries.py
+
+### Step 6: src/main.py
+- Top-level runner wiring the full pipeline
+- Accepts --pcap-dir, --neo4j-uri, --bootstrap-servers as CLI args
+- Reads all Zeek logs from pcap dir
+- Publishes to Redpanda via producer
+- Consumer writes to Neo4j
+- Runs all 5 detection queries
+- Logs results to stdout and logs/guardance.log
+- Graceful shutdown on SIGINT/SIGTERM
+
+### Step 7: Integration test
+- tests/test_integration.py
+- Uses real Zeek log files from data/pcaps/
+- Mocks Neo4j and Redpanda
+- Runs the full pipeline end to end
+- Asserts detection queries return expected results given known input
+
+### Step 8: README.md
+- Project overview using the Guardance description
+- Architecture diagram in ASCII
+- Installation instructions
+- How to run
+- How to extend detection queries
+- License: MIT
+
+## When complete
+Run the full test suite: pytest tests/ -v
+All tests must pass before considering done.
+Report final test count and any issues found.
+
+## Constraints
+- Only work inside ~/Desktop/guardance_v1/
+- Do not run apt, sudo, or system-level commands
+- Only pip for Python packages
+- Do not start Neo4j or Redpanda — mock them in tests
+- Handle all errors gracefully — never crash on bad data
+- Type hints and docstrings on everything
+- Logging over print statements throughout
