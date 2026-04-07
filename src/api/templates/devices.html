@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% set active_page = 'devices' %}
+
+{% block title %}Devices — Guardance{% endblock %}
+
+{% block content %}
+<h1>Devices <span style="color:var(--muted);font-size:1rem;font-weight:400;">({{ total }} total)</span></h1>
+
+{% if devices %}
+<div class="card">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>IP Address</th>
+          <th>MAC</th>
+          <th>Role</th>
+          <th>Zone</th>
+          <th>Purdue Level</th>
+          <th>First Seen</th>
+          <th>Last Seen</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in devices %}
+        <tr>
+          <td><strong>{{ d.ip }}</strong></td>
+          <td>{{ d.mac or '—' }}</td>
+          <td>
+            {% if d.role %}
+            <span class="badge badge-info">{{ d.role }}</span>
+            {% else %}
+            <span style="color:var(--muted);">—</span>
+            {% endif %}
+          </td>
+          <td>{{ d.zone or '—' }}</td>
+          <td>{{ d.purdue_level if d.purdue_level is not none else '—' }}</td>
+          <td>{{ d.first_seen | round(0) | int if d.first_seen else '—' }}</td>
+          <td>{{ d.last_seen  | round(0) | int if d.last_seen  else '—' }}</td>
+          <td><a href="/ui/devices/{{ d.ip }}">Edges →</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if total > limit %}
+<div style="color:var(--muted);font-size:0.8125rem;">
+  Showing {{ devices | length }} of {{ total }} devices.
+  {% if skip + limit < total %}
+  <a href="/ui/devices?skip={{ skip + limit }}">Next page →</a>
+  {% endif %}
+  {% if skip > 0 %}
+  <a href="/ui/devices?skip={{ [skip - limit, 0] | max }}">← Previous</a>
+  {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="empty">
+  <div class="icon">📡</div>
+  <p>No devices found. Run the ingestion pipeline to populate the graph.</p>
+</div>
+{% endif %}
+{% endblock %}

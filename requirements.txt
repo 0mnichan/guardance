@@ -1,0 +1,24 @@
+# Guardance — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# Graph database
+neo4j>=5.0,<6.0
+
+# Message broker
+confluent-kafka>=2.0,<3.0
+
+# Web API
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+jinja2>=3.1,<4.0
+python-multipart>=0.0.9
+
+# Policy enforcement
+requests>=2.31,<3.0
+
+# Streaming (requires Java 11+ at runtime)
+# pyspark>=3.4,<4.0
+
+# Testing
+pytest>=8.0
+httpx>=0.27

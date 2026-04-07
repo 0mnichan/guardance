@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% set active_page = 'findings' %}
+
+{% block title %}Findings — Guardance{% endblock %}
+
+{% block content %}
+<h1>Findings
+  <span style="color:var(--muted);font-size:1rem;font-weight:400;">
+    ({{ total }} total — baseline: {{ baseline_end[:16] }})
+  </span>
+</h1>
+
+<!-- Cross-zone violations -->
+<div class="card" id="cross-zone">
+  <div class="card-header">
+    <h2>
+      Cross-Zone Violations
+      {% if findings.cross_zone_violations %}
+      <span class="badge badge-danger">{{ findings.cross_zone_violations | length }}</span>
+      {% else %}
+      <span class="badge badge-success">0</span>
+      {% endif %}
+    </h2>
+  </div>
+  {% if findings.cross_zone_violations %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Src IP</th><th>Dst IP</th><th>Src Zone</th><th>Dst Zone</th><th>Level Δ</th><th>Protocol</th><th>Port</th><th>Packets</th></tr>
+      </thead>
+      <tbody>
+        {% for f in findings.cross_zone_violations %}
+        <tr>
+          <td>{{ f.src_ip }}</td><td>{{ f.dst_ip }}</td>
+          <td>{{ f.src_zone }} (L{{ f.src_level }})</td>
+          <td>{{ f.dst_zone }} (L{{ f.dst_level }})</td>
+          <td><span class="badge badge-danger">{{ (f.src_level - f.dst_level) | abs }}</span></td>
+          <td>{{ f.protocol }}</td><td>{{ f.port }}</td><td>{{ f.packet_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><p>No cross-zone violations detected.</p></div>
+  {% endif %}
+</div>
+
+<!-- New devices -->
+<div class="card" id="new-devices">
+  <div class="card-header">
+    <h2>
+      New Devices
+      {% if findings.new_devices %}
+      <span class="badge badge-warning">{{ findings.new_devices | length }}</span>
+      {% else %}
+      <span class="badge badge-success">0</span>
+      {% endif %}
+    </h2>
+  </div>
+  {% if findings.new_devices %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>IP</th><th>MAC</th><th>Role</th><th>First Seen</th></tr></thead>
+      <tbody>
+        {% for f in findings.new_devices %}
+        <tr>
+          <td>{{ f.ip }}</td><td>{{ f.mac or '—' }}</td>
+          <td>{{ f.role or '—' }}</td><td>{{ f.first_seen }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><p>No new devices detected.</p></div>
+  {% endif %}
+</div>
+
+<!-- New edges -->
+<div class="card" id="new-edges">
+  <div class="card-header">
+    <h2>
+      New Communication Edges
+      {% if findings.new_edges %}
+      <span class="badge badge-warning">{{ findings.new_edges | length }}</span>
+      {% else %}
+      <span class="badge badge-success">0</span>
+      {% endif %}
+    </h2>
+  </div>
+  {% if findings.new_edges %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Src IP</th><th>Dst IP</th><th>Protocol</th><th>Port</th><th>Function</th><th>Packets</th></tr></thead>
+      <tbody>
+        {% for f in findings.new_edges %}
+        <tr>
+          <td>{{ f.src_ip }}</td><td>{{ f.dst_ip }}</td>
+          <td>{{ f.protocol }}</td><td>{{ f.port }}</td>
+          <td>{{ f.function_code }}</td><td>{{ f.packet_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><p>No new edges detected.</p></div>
+  {% endif %}
+</div>
+
+<!-- Interval deviation -->
+<div class="card" id="interval">
+  <div class="card-header">
+    <h2>
+      Polling Interval Deviation
+      {% if findings.interval_deviation %}
+      <span class="badge badge-warning">{{ findings.interval_deviation | length }}</span>
+      {% else %}
+      <span class="badge badge-success">0</span>
+      {% endif %}
+    </h2>
+  </div>
+  {% if findings.interval_deviation %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Src IP</th><th>Dst IP</th><th>Protocol</th><th>Avg Interval (ms)</th><th>Packets</th><th>Periodic?</th></tr></thead>
+      <tbody>
+        {% for f in findings.interval_deviation %}
+        <tr>
+          <td>{{ f.src_ip }}</td><td>{{ f.dst_ip }}</td>
+          <td>{{ f.protocol }}</td>
+          <td><span class="badge badge-warning">{{ f.avg_interval_ms | round(1) }}</span></td>
+          <td>{{ f.packet_count }}</td>
+          <td>{{ 'Yes' if f.is_periodic else 'No' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><p>No interval deviations detected.</p></div>
+  {% endif %}
+</div>
+
+<!-- Unknown protocol -->
+<div class="card" id="unknown-proto">
+  <div class="card-header">
+    <h2>
+      Unknown Protocol
+      {% if findings.unknown_protocol %}
+      <span class="badge badge-danger">{{ findings.unknown_protocol | length }}</span>
+      {% else %}
+      <span class="badge badge-success">0</span>
+      {% endif %}
+    </h2>
+  </div>
+  {% if findings.unknown_protocol %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Src IP</th><th>Dst IP</th><th>Protocol</th><th>Port</th><th>Packets</th></tr></thead>
+      <tbody>
+        {% for f in findings.unknown_protocol %}
+        <tr>
+          <td>{{ f.src_ip }}</td><td>{{ f.dst_ip }}</td>
+          <td><span class="badge badge-danger">{{ f.protocol }}</span></td>
+          <td>{{ f.port }}</td><td>{{ f.packet_count }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty"><p>No unknown protocols detected.</p></div>
+  {% endif %}
+</div>
+{% endblock %}

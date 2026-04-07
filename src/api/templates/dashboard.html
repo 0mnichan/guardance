@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% set active_page = 'dashboard' %}
+
+{% block title %}Dashboard — Guardance{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<div class="stat-grid">
+  <div class="stat info">
+    <div class="value">{{ stats.device_count }}</div>
+    <div class="label">Devices</div>
+  </div>
+  <div class="stat info">
+    <div class="value">{{ stats.edge_count }}</div>
+    <div class="label">Comm Channels</div>
+  </div>
+  <div class="stat {% if stats.total_findings > 0 %}danger{% else %}success{% endif %}">
+    <div class="value">{{ stats.total_findings }}</div>
+    <div class="label">Active Findings</div>
+  </div>
+  <div class="stat {% if stats.cross_zone > 0 %}danger{% else %}success{% endif %}">
+    <div class="value">{{ stats.cross_zone }}</div>
+    <div class="label">Cross-Zone Violations</div>
+  </div>
+  <div class="stat {% if stats.new_devices > 0 %}warning{% else %}success{% endif %}">
+    <div class="value">{{ stats.new_devices }}</div>
+    <div class="label">New Devices (24h)</div>
+  </div>
+  <div class="stat {% if stats.unknown_protocol > 0 %}danger{% else %}success{% endif %}">
+    <div class="value">{{ stats.unknown_protocol }}</div>
+    <div class="label">Unknown Protocols</div>
+  </div>
+</div>
+
+{% if stats.total_findings > 0 %}
+<div class="alert alert-danger">
+  <strong>{{ stats.total_findings }} active finding(s)</strong> detected.
+  Review the <a href="/ui/findings">Findings</a> page for details.
+</div>
+{% else %}
+<div class="alert alert-info">
+  No findings detected. The network matches the baseline.
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-header">
+    <h2>Detection Summary</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Detection Rule</th>
+          <th>Findings</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text">Cross-zone violations</td>
+          <td>{{ stats.cross_zone }}</td>
+          <td>
+            {% if stats.cross_zone > 0 %}
+            <span class="badge badge-danger">ALERT</span>
+            {% else %}
+            <span class="badge badge-success">CLEAN</span>
+            {% endif %}
+          </td>
+          <td><a href="/ui/findings#cross-zone">View</a></td>
+        </tr>
+        <tr>
+          <td class="text">New devices (24h)</td>
+          <td>{{ stats.new_devices }}</td>
+          <td>
+            {% if stats.new_devices > 0 %}
+            <span class="badge badge-warning">WARN</span>
+            {% else %}
+            <span class="badge badge-success">CLEAN</span>
+            {% endif %}
+          </td>
+          <td><a href="/ui/findings#new-devices">View</a></td>
+        </tr>
+        <tr>
+          <td class="text">New communication edges (24h)</td>
+          <td>{{ stats.new_edges }}</td>
+          <td>
+            {% if stats.new_edges > 0 %}
+            <span class="badge badge-warning">WARN</span>
+            {% else %}
+            <span class="badge badge-success">CLEAN</span>
+            {% endif %}
+          </td>
+          <td><a href="/ui/findings#new-edges">View</a></td>
+        </tr>
+        <tr>
+          <td class="text">Polling interval deviation</td>
+          <td>{{ stats.interval_deviation }}</td>
+          <td>
+            {% if stats.interval_deviation > 0 %}
+            <span class="badge badge-warning">WARN</span>
+            {% else %}
+            <span class="badge badge-success">CLEAN</span>
+            {% endif %}
+          </td>
+          <td><a href="/ui/findings#interval">View</a></td>
+        </tr>
+        <tr>
+          <td class="text">Unknown protocol</td>
+          <td>{{ stats.unknown_protocol }}</td>
+          <td>
+            {% if stats.unknown_protocol > 0 %}
+            <span class="badge badge-danger">ALERT</span>
+            {% else %}
+            <span class="badge badge-success">CLEAN</span>
+            {% endif %}
+          </td>
+          <td><a href="/ui/findings#unknown-proto">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
