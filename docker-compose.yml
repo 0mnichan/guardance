@@ -89,11 +89,11 @@ services:
       - --kafka-addr=PLAINTEXT://0.0.0.0:9092
       - --advertise-kafka-addr=PLAINTEXT://redpanda:9092
     healthcheck:
-      test: ["CMD", "rpk", "cluster", "info"]
-      interval: 15s
+      test: ["CMD-SHELL", "curl -sf http://localhost:9644/v1/cluster/health_overview | grep -q '\"is_healthy\":true' || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 10
-      start_period: 20s
+      retries: 15
+      start_period: 30s
 
   # --------------------------------------------------------------------------
   # Open Policy Agent
@@ -152,7 +152,7 @@ services:
       neo4j:
         condition: service_healthy
       redpanda:
-        condition: service_healthy
+        condition: service_started
       opa:
         condition: service_started
     healthcheck:
