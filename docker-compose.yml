@@ -21,8 +21,6 @@
 #   - Redpanda data is persisted in the 'redpanda-data' named volume.
 #   - PCAPs are bind-mounted read-only from ./data/pcaps on the host.
 
-version: "3.9"
-
 # ---------------------------------------------------------------------------
 # Shared network
 # ---------------------------------------------------------------------------
@@ -131,7 +129,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: runtime
-    image: guardance:latest
     container_name: guardance-api
     restart: unless-stopped
     networks:
