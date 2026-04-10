@@ -1,3 +1,19 @@
 data/pcaps/
 *.pcap
 *.pcapng
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs
+logs/
+
+# Environment
+.env
+
+# Test cache
+.pytest_cache/
+.coverage
+
