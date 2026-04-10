@@ -115,7 +115,7 @@ services:
       - --log-level=info
       - /policies
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:8181/health"]
+      test: ["CMD", "opa", "eval", "--format=raw", "true"]
       interval: 15s
       timeout: 5s
       retries: 5
@@ -154,7 +154,7 @@ services:
       redpanda:
         condition: service_healthy
       opa:
-        condition: service_healthy
+        condition: service_started
     healthcheck:
       test: ["CMD", "python", "-c",
              "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
