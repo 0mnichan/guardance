@@ -52,6 +52,7 @@ from fastapi.templating import Jinja2Templates
 from src.api.auth import require_api_key
 from src.api.routes import devices as devices_router
 from src.api.routes import findings as findings_router
+from src.api.routes import intelligence as intelligence_router
 from src.api.routes.devices import get_neo4j_driver as _devices_driver_dep
 from src.api.routes.findings import get_neo4j_driver as _findings_driver_dep
 
@@ -64,7 +65,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI(
     title="Guardance",
     description="Passive OT/ICS network security monitor",
-    version="2.0.0",
+    version="3.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
     openapi_url="/api/openapi.json",
@@ -76,6 +77,7 @@ templates = Jinja2Templates(directory=str(_TEMPLATES_DIR))
 # Register API routers
 app.include_router(devices_router.router, prefix="/api/v1")
 app.include_router(findings_router.router, prefix="/api/v1")
+app.include_router(intelligence_router.router, prefix="/api/v1")
 
 
 # ---------------------------------------------------------------------------
@@ -93,7 +95,7 @@ async def health() -> dict:
     return {
         "status": "ok",
         "time": datetime.now(tz=timezone.utc).isoformat(),
-        "version": "2.0.0",
+        "version": "3.0.0",
     }
 
 

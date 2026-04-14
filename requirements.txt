@@ -16,6 +16,10 @@ python-multipart>=0.0.9
 # Policy enforcement
 requests>=2.31,<3.0
 
+# Behavioral baseline engine and role classifier
+numpy>=1.26,<3.0
+scikit-learn>=1.3,<2.0
+
 # Streaming (requires Java 11+ at runtime)
 # pyspark>=3.4,<4.0
 

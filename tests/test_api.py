@@ -148,7 +148,7 @@ class TestHealth:
         body = resp.json()
         assert body["status"] == "ok"
         assert "time" in body
-        assert body["version"] == "2.0.0"
+        assert body["version"] == "3.0.0"
 
 
 # ---------------------------------------------------------------------------
