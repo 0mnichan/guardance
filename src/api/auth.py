@@ -86,7 +86,7 @@ async def require_api_key(
         )
 
     if api_key not in valid_keys:
-        logger.warning("Invalid API key attempt: %r", api_key[:8] + "...")
+        logger.warning("Invalid API key attempt (key length: %d)", len(api_key))
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid API key",
